@@ -3,6 +3,9 @@ val CirceVersion = "0.12.1"
 val CirceConfigVersion = "0.7.0-M1"
 val Specs2Version = "4.1.0"
 val LogbackVersion = "1.2.3"
+val ScalaCheckVersion = "1.14.0"
+val ScalaTestVersion = "3.1.0-SNAP13"
+val ScalaTestPlusVersion = "1.0.0-SNAP8"
 
 lazy val root = (project in file("."))
   .settings(
@@ -18,7 +21,9 @@ lazy val root = (project in file("."))
       "io.circe" %% "circe-generic" % CirceVersion,
       "io.circe" %% "circe-parser" % CirceVersion,
       "io.circe" %% "circe-config" % CirceConfigVersion,
-      "org.specs2" %% "specs2-core" % Specs2Version % "test",
+      "org.scalacheck" %% "scalacheck" % ScalaCheckVersion % Test,
+      "org.scalatest" %% "scalatest" % ScalaTestVersion % Test,
+      "org.scalatestplus" %% "scalatestplus-scalacheck" % ScalaTestPlusVersion % Test,
       "ch.qos.logback" % "logback-classic" % LogbackVersion
     ),
     addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.10.3"),

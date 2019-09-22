@@ -9,4 +9,5 @@ trait PaymentRepositoryAlgebra[F[_]] {
   def get(id: GUID): OptionT[F, Payment]
   def incViews(owner: Studio): F[Payment]
   def reset(): F[Unit]
+  def create(payment: Payment): F[Payment]
 }

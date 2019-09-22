@@ -25,14 +25,13 @@ class PaymentEndpoints[F[_]: Sync] extends Http4sDsl[F] {
           paymentList <- paymentService.list()
         } yield paymentList
 
-        action.flatMap {
-          case Nil                  => Ok()
-          case other: List[Payment] => Ok(other.asJson)
+        action.flatMap { payments =>
+          Ok(payments.asJson)
         }
 
       case GET -> Root / ownerId =>
         val payments: EitherT[F, StudioNotFoundError, Payment] = for {
-          owner <- ownerService.get(ownerId)
+          owner   <- ownerService.get(ownerId)
           payment <- paymentService.get(owner.id)
         } yield payment
 

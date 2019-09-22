@@ -9,13 +9,11 @@ import com.cesar.royaltymanager.domain.studios.Studio
 
 import scala.collection.concurrent.TrieMap
 
-class PaymentRepositoryInMemoryInterpreter[F[_]: Applicative] extends PaymentRepositoryAlgebra[F] {
+class PaymentRepositoryInterpreter[F[_]: Applicative] extends PaymentRepositoryAlgebra[F] {
   private var cache = new TrieMap[GUID, Payment]
 
-  override def list(): F[List[Payment]] = {
-    println(cache.values)
+  override def list(): F[List[Payment]] =
     cache.values.toList.pure[F]
-  }
 
   override def get(id: GUID): OptionT[F, Payment] = OptionT.fromOption(cache.get(id))
 
@@ -32,9 +30,15 @@ class PaymentRepositoryInMemoryInterpreter[F[_]: Applicative] extends PaymentRep
     cache = new TrieMap[GUID, Payment]
     ().pure[F]
   }
+
+  // Used for test. Functionality not exposed in the API
+  override def create(payment: Payment): F[Payment] = {
+    cache.put(payment.rightsownerId, payment)
+    payment.pure[F]
+  }
 }
 
-object PaymentRepositoryInMemoryInterpreter {
-  def apply[F[_]: Applicative]: PaymentRepositoryInMemoryInterpreter[F] =
-    new PaymentRepositoryInMemoryInterpreter()
+object PaymentRepositoryInterpreter {
+  def apply[F[_]: Applicative]: PaymentRepositoryInterpreter[F] =
+    new PaymentRepositoryInterpreter()
 }
